@@ -1,9 +1,9 @@
-import 'package:ecom_fluter/home/food_page_body.dart';
 import 'package:ecom_fluter/utils/colors.dart';
 import 'package:ecom_fluter/widgets/big_text.dart';
 import 'package:ecom_fluter/widgets/small_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'food_page_body.dart';
 
 class MainFoodPage extends StatefulWidget {
   const MainFoodPage({Key? key}) : super(key: key);
@@ -18,6 +18,7 @@ class _MainFoodPageState extends State<MainFoodPage> {
     return Scaffold(
       body: Column(
         children: [
+          // Showing the header
           Container(
 
             child: Container(
@@ -52,7 +53,11 @@ class _MainFoodPageState extends State<MainFoodPage> {
               ),
             ),
           ),
-          FoodPageBody(),
+          // Showing the body
+          Expanded(child: SingleChildScrollView(
+            child: FoodPageBody(),
+          ))
+
         ],
       ),
     );
