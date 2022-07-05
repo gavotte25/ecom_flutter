@@ -11,6 +11,8 @@ class CartController extends GetxController{
   CartController({required this.cartRepo});
   Map<int, CartModel> _items={};
   Map<int, CartModel> get items=>_items;
+
+  List<CartModel> storageItems = [];
   
   void addItem(ProductModel product, int quantity) {
     var totalQuantity = 0;
@@ -24,7 +26,8 @@ class CartController extends GetxController{
             img: value.img,
             quantity: value.quantity!+quantity,
             isExist: true,
-            time: DateTime.now().toString()
+            time: DateTime.now().toString(),
+            product: product
         );
       });
       if(totalQuantity<=0) {
@@ -40,7 +43,8 @@ class CartController extends GetxController{
               img: product.img,
               quantity: quantity,
               isExist: true,
-              time: DateTime.now().toString()
+              time: DateTime.now().toString(),
+              product: product
           );
         });
       } else {
@@ -49,6 +53,8 @@ class CartController extends GetxController{
             colorText: Colors.white);
       }
     }
+    cartRepo.addToCartList(getItems);
+    update();
   }
 
   bool existInCart(ProductModel product) {
@@ -70,7 +76,7 @@ class CartController extends GetxController{
     return quantity;
   }
 
-  int get totalItesm{
+  int get totalItems{
     var totalQuantity = 0;
     _items.forEach((key, value) {
       totalQuantity += value.quantity!;
@@ -82,5 +88,36 @@ class CartController extends GetxController{
     return _items.entries.map((e) {
       return e.value;
     }).toList();
+  }
+
+  int get totalAmount{
+    var total = 0;
+    _items.forEach((key, value) {
+      total += value.quantity! * value.price!;
+    });
+    return total;
+  }
+
+  List<CartModel> getCartData() {
+    setCart = cartRepo.getCartList();
+    return storageItems;
+  }
+
+  set setCart(List<CartModel> items) {
+    storageItems = items;
+
+    for (int i=0; i<storageItems.length; i++) {
+      _items.putIfAbsent(storageItems[i].product!.id!, () => storageItems[i]);
+    }
+  }
+
+  void addToHistory() {
+    cartRepo.addToCartHistoryList();
+    clear();
+  }
+
+  void clear() {
+    _items = {};
+    update();
   }
 }
